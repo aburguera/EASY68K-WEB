@@ -1,0 +1,34 @@
+MIT License
+
+Copyright (c) 2025-2026 Antoni Burguera
+
+This license covers only this project's OWN new code: the WebAssembly
+adapter layers (`src/engine-asm/wasm_api.cpp`, `src/engine-sim/wasm_api.cpp`,
+`src/engine-sim/simio_stub.h`), the browser frontend (`src/web/`), the build
+tooling (`tools/`, `build.sh`), and the documentation (`docs/`).
+
+It does NOT cover the original EASy68K assembler/simulator source files
+this project compiles largely unmodified (everything else under
+`src/engine-asm/` and `src/engine-sim/`) - those files carry their own,
+separate provenance. See `NOTICE.md` for exactly what that is, since no
+license text was found accompanying them as obtained.
+
+---
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.

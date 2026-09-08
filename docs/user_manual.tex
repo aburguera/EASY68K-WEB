@@ -1,0 +1,200 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[most]{tcolorbox}
+\usepackage{overpic}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\definecolor{easyamber}{HTML}{B98530}
+\definecolor{easytext}{HTML}{1D2126}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=easyamber,
+  urlcolor=easyamber,
+  pdftitle={EASy68K Web -- User Manual},
+  pdfauthor={Antoni Burguera}
+}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{easyamber}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\graphicspath{{images/}}
+
+\title{\textbf{EASy68K Web}\\[0.3cm]\Large User Manual}
+\author{Antoni Burguera\\\small{Universitat de les Illes Balears}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{tcolorbox}[colback=gray!5!white,colframe=gray!60!black,title=About this manual]
+This manual documents the browser-based EASy68K Web application: what each
+button and panel does, and what you need to know about its virtual
+file system before trusting it with real work. It does not document the
+Motorola 68000 instruction set or 68000 assembly programming in general --
+only this specific application's own user interface and its TRAP \#15
+extensions (the latter fully documented in the companion
+\emph{TRAP \#15 Reference}, \texttt{trap15\_reference.pdf}). This same
+content, kept in sync, is also available inside the application itself
+through its own \textbf{Help} button. For anything about EASy68K itself,
+the 68000 instruction set, or assembly-language programming in general
+that this manual doesn't cover, see EASy68K's own official documentation
+at \url{http://www.easy68k.com/}.
+\end{tcolorbox}
+
+\tableofcontents
+\vspace{1cm}
+
+\section{Overview}
+
+\input{sections/what_this_is.tex}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{overview_debugging.png}
+  \caption{EASy68K Web while debugging a program: the code listing (center) with the current instruction highlighted, the register/memory panel (right), the file explorer (left), and the assembler messages (bottom).}
+\end{figure}
+
+\clearpage
+\section{Getting started}
+
+Open \texttt{dist/easy68k-web.html} directly in any modern browser -- no
+installation, no server, no account. Everything, including the assembler
+and the simulator, runs locally on your own machine.
+
+\begin{enumerate}[label=\arabic*.]
+  \item Create a new file (toolbar \textbf{New} group) or import an existing project.
+  \item Write or paste your 68000 assembly source.
+  \item Click \textbf{Assemble}. If it succeeds, the view switches to the simulator.
+  \item Click \textbf{Run}, or \textbf{Step} through the program one instruction at a time.
+  \item Click \textbf{Reset} to go back to editing.
+\end{enumerate}
+
+\section{Layout overview}
+
+The application window is divided into four regions, all visible in
+Figure~\ref{fig:overview}:
+
+\begin{itemize}
+  \item \textbf{Left -- Explorer}: the virtual file tree.
+  \item \textbf{Center -- Editor / Simulator}: the source code editor while editing, or the assembled listing while simulating.
+  \item \textbf{Right -- Registers, Memory \& Stack}: the debugger panels.
+  \item \textbf{Bottom -- Messages}: assembler errors/warnings and the runtime log.
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{overview_editing.png}
+  \caption{The four regions of the interface, shown here in Editing mode with no file open.}
+  \label{fig:overview}
+\end{figure}
+
+\clearpage
+\input{sections/top_bar_panel_visibility.tex}
+
+\begin{figure}[h]
+  \centering
+  \begin{overpic}[width=0.5\textwidth]{topbar_closeup.png}
+    \put(6,-8){\small 1}
+    \put(24,-8){\small 2}
+    \put(42,-8){\small 3}
+  \end{overpic}
+  \caption{The three panel-visibility toggles in the top bar: (1) left/Explorer, (2) bottom/Messages, (3) right/Registers-Memory-Stack.}
+\end{figure}
+
+\input{sections/the_two_modes_editing_and_simulating.tex}
+
+\clearpage
+\input{sections/editor_toolbar.tex}
+
+\begin{figure}[h]
+  \centering
+  \begin{overpic}[width=\textwidth]{toolbar_closeup.png}
+    \put(1,-6){\small 1}
+    \put(16,-6){\small 2}
+    \put(29,-6){\small 3}
+    \put(41,-6){\small 4}
+    \put(53,-6){\small 5}
+    \put(66,-6){\small 6}
+  \end{overpic}
+  \vspace{0.3cm}
+  \caption{Editor toolbar groups: (1) New, (2) Load, (3) Save, (4) Edit, (5) Split, (6) Tabs/Assemble-Simulate row below (not numbered individually -- see table above). The moon/sun icon on the far right is the theme toggle; the gear icon opens Settings.}
+\end{figure}
+
+\clearpage
+\section{The Files panel and the virtual file system}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.35\textwidth]{left_panel_closeup.png}
+  \caption{The Explorer panel: the Files tab, its virtual filesystem tree, and the ``Clear Browser Storage'' action.}
+\end{figure}
+
+\input{sections/files_panel_amp_the_virtual_file_system.tex}
+
+\clearpage
+\section{Registers, Memory and Stack}
+
+\input{sections/registers_memory_amp_stack_right_column.tex}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{right_panel_closeup.png}
+  \caption{The Registers panel, the Status Register bit display, and the Memory hex/ASCII dump.}
+\end{figure}
+
+\clearpage
+\input{sections/output_window.tex}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{overview_windows.png}
+  \caption{The Output window (a program's TRAP \#15 graphics/text) and the Hardware \& Interrupt window, both open side by side.}
+\end{figure}
+
+\input{sections/hardware_amp_interrupt_window.tex}
+
+\clearpage
+\input{sections/settings.tex}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{settings_modal.png}
+  \caption{The Settings dialog: editor font/size/tabs/column-mark preferences and the simulator's initial interrupt-mask option.}
+\end{figure}
+
+\clearpage
+\section{In-app Help}
+
+Every topic in this manual is also available inside the application
+itself, always up to date with whichever version of the app you are
+running: click the \textbf{Help} button (the question-mark icon, next to
+Settings) to open it, side by side with your own work.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{help_userguide.png}
+  \caption{The in-app Help window, User Guide tab -- the same content as this manual, plus the full TRAP \#15 reference in its own tab.}
+\end{figure}
+
+\vspace{1cm}
+\begin{tcolorbox}[colback=gray!5!white,colframe=gray!60!black,title=See also]
+For the complete, task-by-task TRAP \#15 reference (every parameter,
+every register, fully documented), see the companion document
+\emph{EASy68K Web -- TRAP \#15 Reference} (\texttt{trap15\_reference.pdf}).
+\end{tcolorbox}
+
+\end{document}

@@ -1,0 +1,6 @@
+\subsection*{Hardware \& Interrupt window}
+Opened with the \textbf{Hardware} button. The \textbf{Hardware} tab shows the memory-mapped 7-segment display, LEDs, toggle switches, and push buttons a program can read/write like real peripherals — each device's mapped address is editable (with a one-click reset to its default). The \textbf{Interrupt} tab lets you fire IRQ levels 1-7 by hand, including an auto-repeat timer per level, to test a program's own interrupt handlers without needing real hardware.
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!60!black,title=Note]
+An interrupt only actually fires if its level is above SR's current interrupt-priority mask (real 68000 behavior, not a bug) — a masked IRQ button press is logged as masked rather than silently doing nothing.
+\end{tcolorbox}

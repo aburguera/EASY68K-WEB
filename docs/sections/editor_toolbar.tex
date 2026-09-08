@@ -1,0 +1,34 @@
+\subsection*{Editor toolbar}
+Grouped left to right, above the source editor:
+
+\begin{longtable}{@{}p{3.0cm}p{3.4cm}p{7.8cm}@{}}
+\toprule
+\textbf{Group} & \textbf{Button} & \textbf{Does} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Group} & \textbf{Button} & \textbf{Does} \\
+\midrule
+\endhead
+New & New file / New folder & Creates an empty file (from a small default template, optional) or folder in the virtual file system, inside whichever folder is currently selected in the Files panel. \\
+Load & Import file… & Adds one file to the virtual file system. \\
+ & Import folder… & Copies an entire local folder in, preserving its structure. If any project is already open, this \textbf{replaces the whole virtual file system}, not just files with matching names - you're asked to confirm first, with an option to download a backup ZIP of what's about to be deleted. \\
+ & Import ZIP… & Same as Import Folder (including the same whole-project replace-and-confirm behavior), from a \texttt{.zip} archive. \\
+Save & Download file & Downloads the current file to your real disk. Always a fresh, explicit download (\texttt{Ctrl/Cmd+S}) — never a silent "save". \\
+ & Export ZIP & Downloads every file in the virtual file system as one \texttt{.zip} archive. \\
+Edit & Comment out / Uncomment & Toggles a leading \texttt{*} comment marker on every selected line. \\
+ & Remove trailing spaces & Strips trailing spaces/tabs from every line of the current file (the whole file, not just a selection) - purely cosmetic, has no effect on assembling. \\
+Split & Split editor / Close all splits & Opens a second editor pane side by side (so you can view/edit two files at once) or collapses back to one. \\
+Tabs & Close current tab & Closes the active file tab. \\
+ & Close other tabs & Closes every tab except the active one. \\
+ & Close all tabs & Closes every open tab. \\
+Assemble/Simulate & Assemble & Builds the current file with the real EASy68K assembler. On success, switches to Simulating; on failure, opens the Assembly Failed dialog listing every error. \\
+ & Run / Pause & Runs continuously until it halts, hits a breakpoint, or you press Pause. \\
+ & Step & Executes exactly one instruction. \\
+ & Step Over & Like Step, but a \texttt{BSR}/\texttt{JSR} call runs to completion in one go rather than single-stepping into the subroutine. \\
+ & Reset & Stops simulation and returns to Editing. Also the only way breakpoints and simulator-only state get cleared. \\
+\bottomrule
+\end{longtable}
+To the right of the groups: a \textbf{search} box (Enter to find/advance), \textbf{Editor settings} (font, size, tab width, column mark), and this \textbf{Help} button.
+
+A thin amber \textbf{column-mark line} runs down the editor at a fixed column (80 by default) - a visual guide only, it has no effect on assembling. Its column is editable in Settings. A status bar along the bottom of the editor shows the cursor's current \textbf{line and column} (\texttt{Ln, Col}), updated as you type, click, or move the caret with the keyboard.

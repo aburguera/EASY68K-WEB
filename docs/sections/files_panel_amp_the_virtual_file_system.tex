@@ -1,0 +1,8 @@
+\subsection*{Files panel \& the virtual file system}
+The left-hand \textbf{Files} tab is a small file tree with its own right-click context menu (New File/Folder, Upload files/ZIP, Rename, Cut, Copy, Paste, Delete) and drag-and-drop for moving or copying entries between folders. Files can also be dragged in directly from your desktop.
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!60!black,title=Warning]
+\textbf{Nothing here is ever linked to your real disk.} Import Folder, Upload files, and Import ZIP all just \textit{copy} files into the browser — they're auto-saved locally (IndexedDB) and survive closing the tab or reloading the page, but editing them here never changes your real files, on any browser, and nothing you import is ever sent anywhere. To get a real copy back out, use \textbf{Export ZIP} or \textbf{Download file} — an explicit, one-time download, not an ongoing link.\par \par 
+      This storage is \textbf{private to this one browser} (not synced across browsers, devices, or even a regular vs. private/incognito window in the same browser), and it can be erased not only by this app's own \textbf{Clear Browser Storage} button (which is permanent and cannot be undone) but also by clearing site data/cookies for this page from your browser's own settings. If a project matters, keep a real copy on disk via Export ZIP — don't rely on browser storage as your only copy.
+    
+\end{tcolorbox}

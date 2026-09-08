@@ -1,0 +1,57 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage{fontspec}
+\usepackage[margin=2cm]{geometry}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+\definecolor{easyamber}{HTML}{B98530}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=easyamber,
+  urlcolor=easyamber,
+  pdftitle={EASy68K Web -- TRAP \#15 Reference},
+  pdfauthor={Antoni Burguera}
+}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{easyamber}}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{\textbf{EASy68K Web}\\[0.3cm]\Large TRAP \#15 Reference}
+\author{Antoni Burguera\\\small{Universitat de les Illes Balears}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{tcolorbox}[colback=gray!5!white,colframe=gray!60!black,title=About this reference]
+\texttt{D0.B} selects the task before every \texttt{TRAP \#15}. This is the
+real TRAP \#15 dispatch logic from the original EASy68K source -- every
+task listed here does exactly what the table says, including the ones
+this web port implements in the browser rather than through Windows GDI.
+Text and graphics draw to the \textbf{same screen}, exactly like real
+EASy68K (text is drawn as glyphs onto the graphics canvas by row/column).
+Only serial (40--43) and network (100+) are unimplemented, by explicit
+choice: a browser tab cannot open a serial port or an arbitrary TCP
+socket, so those tasks log a one-time explanation and report a definite
+failure code instead of hanging or crashing.
+
+Every register is given with its explicit size (\texttt{.B}\,/\,\texttt{.W}\,/\,\texttt{.L}). Where a task packs several values into one register, that is spelled out explicitly (e.g. \texttt{D1.L packed: bits 16--31 = row, bits 0--15 = col}). This same content, always kept in sync with the running application, is also available from inside the app itself: click \textbf{Help} (the question-mark icon), then the \textbf{TRAP \#15} tab. For background on TRAP \#15 itself, or any real-EASy68K behavior this reference doesn't spell out, see EASy68K's own official documentation at \url{http://www.easy68k.com/}.
+\end{tcolorbox}
+
+\tableofcontents
+\vspace{0.5cm}
+
+\input{trap15_body.tex}
+
+\end{document}

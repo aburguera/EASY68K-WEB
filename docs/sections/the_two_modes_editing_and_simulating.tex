@@ -1,0 +1,10 @@
+\subsection*{The two modes: Editing and Simulating}
+The app is always in one of two modes, shown by the badge next to the "Editor" title:
+
+\begin{itemize}
+\item \textbf{EDITING} — write and manage source files. The toolbar's last group is labeled \textbf{ASSEMBLE}; only its \textbf{Assemble} button is active.
+\item \textbf{SIMULATING} — after a successful Assemble, the view switches to a read-only listing of your program (source and machine code merged, matching the real assembler's \texttt{.L68} listing) and the same toolbar group relabels to \textbf{SIMULATE}, enabling \textbf{Run}, \textbf{Step}, \textbf{Step Over}, and \textbf{Reset}. The editor itself becomes read-only while simulating ((lock) shown in the title bar) — press \textbf{Reset} to return to editing.
+\end{itemize}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!60!black,title=Note]
+\textbf{Breakpoints only exist during simulation.} Click a line number in the listing to toggle one; Run stops when the PC reaches it. They're cleared every time you Reset, so a breakpoint never ends up pointing at the wrong line after you've since edited the file.
+\end{tcolorbox}
