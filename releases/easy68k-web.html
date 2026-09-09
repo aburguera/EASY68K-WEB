@@ -12227,6 +12227,31 @@ class Machine{
     // deep) - tell it separately so a nested-folder project's sibling
     // INCLUDEs resolve correctly. See wasm_set_main_path in wasm_api.cpp.
     this.asmEngine.ccall('wasm_set_main_path', null, ['string'], [this.currentFilePath]);
+    // The SIMULATOR's own TRAP #15 file I/O (tasks 50-59, SIMOPS2.CPP) is
+    // real, unmodified code that just calls fopen(fname,...) - there's no
+    // custom relative-path resolver to hook into the way DIRECTIV.CPP's
+    // INCLUDE/INCBIN handling has. A bare relative filename (no leading
+    // "/") therefore resolves through Emscripten's own libc/FS layer
+    // against whatever the MEMFS's current working directory happens to
+    // be - which defaults to "/" and, unlike INCLUDE, was never pointed
+    // at the running program's own folder. A real desktop EASy68K almost
+    // certainly runs with its process's CWD set to wherever the opened
+    // .X68 file lives, so a project that keeps its data files in a
+    // subfolder next to the main file (e.g. `OPEN "ASSETS/LEVEL.BTM"`
+    // from `src/MAIN.X68`) works there but silently failed to open here -
+    // to_do.md: a real game's title-screen image never appeared because
+    // its own bare-relative BTM asset path resolved against the
+    // filesystem root instead of its `src/` folder. Fixed by pointing the
+    // simulator engine's OWN MEMFS cwd at the main file's real directory
+    // too, via Emscripten's real FS.chdir() - this needs no C++ change at
+    // all, since plain fopen() already respects the FS layer's cwd for a
+    // relative path. Set once per Assemble (mirrors wasm_set_main_path
+    // above), not per Run/Reset - like a real process's CWD, it shouldn't
+    // reset just because the program restarts.
+    try{
+      const mainDir = this.currentFilePath.replace(/\/[^/]*$/, '') || '/';
+      this.simEngine.FS.chdir(mainDir);
+    }catch(e){}
     const result = this.asmEngine.ccall('wasm_assemble', 'number', [], []);
     const errorCount = this.asmEngine.ccall('wasm_get_error_count', 'number', [], []);
     const errors = [];
