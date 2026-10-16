@@ -4168,13 +4168,54 @@
      instructions per rendered frame (e.g. a real game) still run at a
      usable speed instead of trickling out over many seconds. ---- */
   const FRAME_BUDGET_MS = 12; // leave headroom in each ~16.6ms frame for rendering
-  const CHUNK = 100000;       // instructions per native batch call
+  const CHUNK_MAX = 100000;   // instructions per native batch call - the common, compute-only case
+  const CHUNK_MIN = 50;       // floor for a program whose loop body is almost entirely TRAP #15 calls
+  let chunkSize = CHUNK_MAX;  // adapts down/up based on how long a batch ACTUALLY took - see below
+  // The 100000-instruction batch size above only leaves "headroom in each
+  // ~16.6ms frame" for a compute-only program - the while loop below only
+  // re-checks elapsed time BETWEEN whole chunk calls, never WITHIN one, so
+  // a single chunk can massively overshoot FRAME_BUDGET_MS if its
+  // instruction stream does real per-iteration work outside the CPU core
+  // (every TRAP #15 graphics call is a synchronous EM_JS round-trip into
+  // JS/Canvas2D). to_do.md's mouse-tracking-circle report ("the whole
+  // EASy68K-WEB seems to go slow", the circle looking stuck or redrawn in
+  // the wrong place) turned out to be exactly this: measured directly in
+  // real headless Chrome (not jsdom, which stubs out canvas calls as
+  // free no-ops and so can never reproduce real draw-call cost) via a
+  // requestAnimationFrame call-time log, a single 100000-instruction
+  // batch of that program's ellipse-draw/flip/clear loop took ~415ms of
+  // REAL wall-clock time - about 25x the entire intended per-frame
+  // budget - collapsing the whole app's responsiveness to ~2 rendered
+  // frames/second while Running, not a bug in the user's own program or
+  // in the mouse-IRQ/double-buffer C++ logic (both were re-verified
+  // correct in isolation first). Fixed by making the batch size
+  // self-adjusting: after every `runBatchWithBreakpoints()` call, shrink
+  // `chunkSize` (down to `CHUNK_MIN`) if THAT call alone already used up
+  // the frame budget, or grow it back toward `CHUNK_MAX` once calls are
+  // comfortably cheap again - so a graphics-heavy program's worst-case
+  // single-chunk stall stays bounded close to the intended budget instead
+  // of whatever multiple of it its own per-instruction JS/canvas cost
+  // happens to produce, while an ordinary compute-only program (the
+  // common case for this teaching tool) keeps running at full
+  // `CHUNK_MAX` throughput, completely unaffected. Reset to `CHUNK_MAX`
+  // at the start of every fresh Run (see the `btnRun` handler below) - a
+  // size learned "small" from one graphics-heavy program must not leak
+  // into some later, unrelated compute-bound program's first few frames,
+  // the same class of "reset per-run, not just once at module load" trap
+  // CLAUDE.md already documents for several simulator-side globals.
   function runBatch(){
     if(!machine.running) return;
     machine.hitBreakpoint = false;
     const t0 = performance.now();
     while(!machine.halted() && !machine.hitBreakpoint && (performance.now()-t0) < FRAME_BUDGET_MS){
-      machine.runBatchWithBreakpoints(CHUNK);
+      const callStart = performance.now();
+      machine.runBatchWithBreakpoints(chunkSize);
+      const callMs = performance.now() - callStart;
+      if(callMs > FRAME_BUDGET_MS){
+        chunkSize = Math.max(CHUNK_MIN, Math.floor(chunkSize * (FRAME_BUDGET_MS / callMs) * 0.8));
+      } else if(callMs < FRAME_BUDGET_MS/4 && chunkSize < CHUNK_MAX){
+        chunkSize = Math.min(CHUNK_MAX, chunkSize * 2);
+      }
     }
     const halted = machine.halted(), hitBp = machine.hitBreakpoint;
     if(halted || hitBp){
@@ -4468,6 +4509,7 @@
       // exactly where we left off. Re-assembling here would silently
       // discard all simulation state (registers, memory, PC) and restart
       // the program from scratch instead of actually resuming it.
+      chunkSize = CHUNK_MAX; // fresh Run, not a leftover size from last time - see runBatch()'s own comment
       machine.running=true; ui.onRunStart(); showRunIcon(true); runBatch();
       return;
     }
@@ -4476,6 +4518,7 @@
     // always assemble first, guaranteeing the latest code is what runs
     if(!doAssemble()) return;
     setAppMode('simulating');
+    chunkSize = CHUNK_MAX; // fresh Run, not a leftover size from last time - see runBatch()'s own comment
     machine.mode='run'; machine.running=true; ui.onRunStart(); showRunIcon(true); runBatch();
   });
   btnStep.addEventListener('click', ()=>{
