@@ -121,7 +121,7 @@ def build_trap15():
     close_table()
 
     with open(TRAP15_OUT, 'w', encoding='utf-8') as f:
-        f.write('\n'.join(lines))
+        f.write('\n'.join(lines) + '\n')
     print(f"wrote {TRAP15_OUT} ({sum(1 for e in events if e[0]=='ROW')} tasks, {sum(1 for e in events if e[0]=='SECTION')} sections)")
 
 # ---------------------------------------------------------------------

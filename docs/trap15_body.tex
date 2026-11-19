@@ -81,7 +81,7 @@
 \midrule
 \endhead
 \ttfamily 60 & D1.W packed: bits 8-15 = IRQ level 0-7, bits 0-2 = arm button-down/button-up/move & Arm the mouse button-down/up/move IRQ(s) at the given level (a level >7 is ignored) - click the graphics screen to give it focus first \\
-\ttfamily 61 & D1.L = 16 bits Y, 16 bits X in pixel coordinates (0,0 is top left), D3.B(out)=buttons & Read the current mouse position and button state \\
+\ttfamily 61 & D1.B(in) = which state to read: 0 = current, 1 = at the last button-up, 2 = at the last button-down; D1.L(out) = Y in the high word, X in the low word (pixel coordinates, 0,0 is top left); D0.B(out) = button/modifier bits & Read the mouse position and button state. D0 bits: 0 = left, 1 = right, 2 = middle, 3 = double-click, 4 = Shift, 5 = Alt, 6 = Ctrl \\
 \ttfamily 62 & D1.W packed: bits 8-15 = IRQ level 0-7, bits 0-1 = arm key-down/key-up & Arm the keyboard key-down/up IRQ(s) at the given level (a level >7 is ignored) - click the graphics screen to give it focus first \\
 \bottomrule
 \end{longtable}
